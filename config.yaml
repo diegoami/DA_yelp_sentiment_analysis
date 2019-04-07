@@ -1,0 +1,7 @@
+SOURCE_DIR : /media/diego/QData/datasets/yelp/source/
+TARGET_DIR : /media/diego/QData/datasets/yelp/target/
+REVIEW_JSON_FILE : review.json
+REVIEW_CSV_FILE : review.csv
+VERBOSE: True
+REVIEWS_USED: 1000000
+# REVIEWS_USED: -1 for all

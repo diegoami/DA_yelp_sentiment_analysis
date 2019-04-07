@@ -1,76 +1,54 @@
-from sklearn.pipeline import Pipeline
-from sklearn.feature_extraction.text import TfidfTransformer
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.linear_model import SGDRegressor
-import pandas as pd
-from nltk.tokenize import word_tokenize
-from string import punctuation
 import logging
 import pickle
-import csv
-from sklearn.metrics import mean_squared_error
+import os
+import pandas as pd
+import yaml
 
+
+from sklearn.pipeline import Pipeline
+from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.linear_model import SGDRegressor
+from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
-ROWS_TOTAL = 100000
+from token_count_vectorizer import TokenCountVectorizer
+
+with open("config.yaml", 'r') as stream:
+    config = yaml.safe_load(stream)
+
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.DEBUG)
 
-REVIEWS_TOKENS_FILE_IN = '/media/diego/QData/datasets/yelp/review.csv'
-REVIEWS_PIPELINE = '/media/diego/QData/datasets/yelp/review.pipeline'
+ROWS_TOTAL = config['REVIEWS_USED']
+REVIEWS_TOKENS_FILE_IN = os.path.join(config['TARGET_DIR'], config['REVIEW_CSV_FILE'])
+REVIEWS_PIPELINE = os.path.join(config['TARGET_DIR'], f'review.pipeline-{ROWS_TOTAL}')
 
+
+logging.info(f'Reading {ROWS_TOTAL} reviews...')
 df = pd.read_csv(REVIEWS_TOKENS_FILE_IN, nrows=ROWS_TOTAL, usecols=['text', 'stars'])
 df = df.sample(frac=1)
 df_train, df_test = train_test_split(df, test_size=0.2)
+logging.info('Done.')
 
-
-class TokenCountVectorizer(CountVectorizer):
-
-
-    @staticmethod
-    def iterate_pandas_text(df_arg):
-        for index, row in df_arg.text.iteritems():
-            yield row
-
-    @staticmethod
-    def iterate_ratings():
-        with open(REVIEWS_TOKENS_FILE_IN, 'r', encoding='UTF-8') as rif:
-            csvreader = csv.reader(rif)
-            # for line_num, row in enumerate(csvreader):
-
-            for line_num, row in zip(range(ROWS_TOTAL+1), csvreader):
-                if line_num > 0:
-                    yield row[1]
-
-    @staticmethod
-    def to_tokens(text):
-        tokens = word_tokenize(text)
-        tokens = [token.lower() for token in tokens if token not in punctuation]
-        tokens = [token for token in tokens if any([i.isalpha() for i in token])]
-        return tokens
-
-
-logging.info("Start .....")
 text_clf = Pipeline([
-     ('vect', TokenCountVectorizer(tokenizer=TokenCountVectorizer.to_tokens, max_df=0.4, min_df=10)),
+     ('vect', TokenCountVectorizer(tokenizer=TokenCountVectorizer.to_tokens, ngram_range=(1, 2), max_df=0.3, min_df=10)),
      ('tfidf', TfidfTransformer()),
-     ('sgd_regressor', SGDRegressor())
+     ('sgd_regressor', SGDRegressor(verbose=config['VERBOSE']))
 ])
 
 logging.info("Fitting Model .....")
 text_clf.fit(TokenCountVectorizer.iterate_pandas_text(df_train), df_train.stars)
-logging.info("Done .....")
-logging.info("Saving model .....")
+logging.info(f'Saving model to {REVIEWS_PIPELINE}.....')
 
 with open(REVIEWS_PIPELINE, 'wb') as wmo:
     pickle.dump(text_clf, wmo)
 
 logging.info("Done")
 
-logging.info(f'Predictions: {text_clf.predict(["This place is great","I hate this place, it sucks","Food is bad, drinks are average, very expensive"])}')
 
-test_predicted = text_clf.predict(df_test.text)
+logging.info('Calculating error for training set...')
 train_predicted = text_clf.predict(df_train.text)
-
 logging.info(f'Train MSE : {mean_squared_error(df_train.stars, train_predicted)}')
 
+logging.info('Calculating error for test set...')
+test_predicted = text_clf.predict(df_test.text)
 logging.info(f'Test MSE : {mean_squared_error(df_test.stars, test_predicted)}')

@@ -31,7 +31,7 @@ logging.info(f'Reading from {REVIEWS_TOKENS_FILE_IN }')
 
 
 bigrams_phrases = Phrases(iterate_ratings(), scoring='npmi', threshold=0.88)
-bigrams_phrases.save(BIGRAMS_PHRASER_FILENAME)
+bigrams_phrases.save(BIGRAMS_PHRASES_FILENAME)
 
 bigrams_phraser = Phraser(bigrams_phrases)
 bigrams_phraser.save(BIGRAMS_PHRASER_FILENAME)

@@ -4,7 +4,7 @@ import csv
 import ast
 import logging
 
-REVIEWS_TOKENS_FILE_IN = '/media/diego/QData/datasets/yelp/review_tokenized_2.csv'
+REVIEWS_TOKENS_FILE_IN = '/media/diego/QData/datasets/yelp/review_tokenized_3.csv'
 BIGRAMS_PHRASER_FILENAME   = '/media/diego/QData/datasets/yelp/bigrams_phraser'
 BIGRAMS_PHRASES_FILENAME   = '/media/diego/QData/datasets/yelp/bigrams_phrases'
 

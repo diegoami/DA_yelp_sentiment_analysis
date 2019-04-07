@@ -35,7 +35,8 @@ To make it easier to work with the dataset, we extract the relevant information 
 
 `python review_json_to_csv.py`
 
-This will save a `reviews.csv` into the target directory
+This will save a `reviews.csv` into the target directory. 
+It is also available here: https://s3.eu-central-1.amazonaws.com/diegoamicabile-yelp/review.csv.tgz
 
 ### TRAIN MODEL
 
@@ -53,5 +54,32 @@ You can use the model, typing your reviews after the command prompt, executing
 `python run_model.py`
 
 
+## MODEL DETAILS
 
+### PREPROCESSING
 
+Some effort has been done on preprocessing, but more experiments might give better results. 
+
+- Standard NLTK tokenization is used
+- Punctuation token get removed, 
+- Tokens having no alphabetic characters are removed
+- CountVectorization use 1 and 2 grams
+- CountVectorization removes tokens that appear in more than 30% of the reviews corpus (corpus specific stop words)
+
+### PIPELINE
+
+The Pipeline is made of these components. They have not been tuned, so improvements are possible
+- CountVectorizer
+- TfidfTransformer
+- SGDRegressor
+
+### RESULT
+
+I trained a model using 1m reviews, using 80% for training and 20% for test. It is
+
+The target variable is the stars given during the review (from 1 to 5). The model predicts this value (from 1 to 5) and is therefore a regression.
+
+On this model, the MSE is the following
+
+- Training Set: 
+- Test Set

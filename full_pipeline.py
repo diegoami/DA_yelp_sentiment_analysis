@@ -10,8 +10,6 @@ import pickle
 import csv
 from sklearn.metrics import mean_squared_error
 
-
-import numpy as np
 from sklearn.model_selection import train_test_split
 
 ROWS_TOTAL = 100000
@@ -53,7 +51,7 @@ class TokenCountVectorizer(CountVectorizer):
 
 logging.info("Start .....")
 text_clf = Pipeline([
-     ('vect', TokenCountVectorizer(tokenizer=TokenCountVectorizer.to_tokens, max_df=0.5, min_df=5)),
+     ('vect', TokenCountVectorizer(tokenizer=TokenCountVectorizer.to_tokens, max_df=0.4, min_df=10)),
      ('tfidf', TfidfTransformer()),
      ('sgd_regressor', SGDRegressor())
 ])
@@ -61,9 +59,12 @@ text_clf = Pipeline([
 logging.info("Fitting Model .....")
 text_clf.fit(TokenCountVectorizer.iterate_pandas_text(df_train), df_train.stars)
 logging.info("Done .....")
+logging.info("Saving model .....")
 
 with open(REVIEWS_PIPELINE, 'wb') as wmo:
     pickle.dump(text_clf, wmo)
+
+logging.info("Done")
 
 logging.info(f'Predictions: {text_clf.predict(["This place is great","I hate this place, it sucks","Food is bad, drinks are average, very expensive"])}')
 

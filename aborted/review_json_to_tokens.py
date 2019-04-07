@@ -5,6 +5,7 @@ from nltk import word_tokenize
 from string import punctuation
 import pickle
 
+
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 REVIEWS_INPUT_FILE = '/media/diego/QData/datasets/yelp/review.json'

@@ -9,17 +9,25 @@ It use the Reviews from the YELP Dataset.
 
 ### RETRIEVE THE DATASET
 
-Retrieve the YELP Dataset here: https://www.yelp.com/dataset and extract the `reviews.json` file into a source directory.
+Retrieve the YELP Dataset here: https://www.yelp.com/dataset and extract the `reviews.json` file into a directory (we will call it <SOURCE-DIR>).
 
 ### CONFIGURE DIRECTORIES 
 
-Define the source (where data from yelp is located) and target directory (where to save results) in the `config.yaml` file.
+Define the directories where the YELP dataset is located in the `config.yaml` file. 
+
+Alternative, set up symbolic links to your source and target directories from the program's home directory.
+
+```
+mkdir data
+ln -s <SOURCE-DIR> data/source
+ln -s <TARGET-DIR> data/target
+```
+
+
 
 ### SET UP ENVIRONMENT
 
-If you have conda, you can install an environment this way
-
-Assuming Conda is installed
+If you have Conda 
 
 ```
 conda create -n yelp_review python=3.7
@@ -30,9 +38,18 @@ python -m pip install -r requirements.txt
 Alternatively, with Docker
 
 ```
-docker build --tag yelp_sent . 
-docker run -it -v $(pwd)/data:data --name yelp_sent yelp_sent:latest /bin/bash
+docker build --tag yelp_sent . # BUILD
+docker run -it -v <SOURCE-DIR>:/app/data/source/ -v <TARGET-DIR>:/app/data/target/ -v $(pwd)/config.yaml:/app/config.yaml --name yelp_sent yelp_sent:latest /bin/bash # RUN
+docker run -it -v $(pwd)/data/source:/app/data/source/ -v $(pwd)/data/target:/app/data/target/ -v $(pwd)/config.yaml:/app/config.yaml --name yelp_sent yelp_sent:latest /bin/bash # RUN if you set symbolic links
+
+docker stop yelp_sent # to STOP
+docker container rm yelp_sent # to Remove the container
+
 ```
+
+
+
+and then execute the commands described below, from the docker container.
 
 ## SCRIPTS EXECUTION
 
@@ -86,9 +103,9 @@ The Pipeline is made of these components. As not much effort has been invested i
 
 ### RESULT
 
-I trained a model using 1m reviews, using 80% for training and 20% for test. It is available at https://s3.eu-central-1.amazonaws.com/diegoamicabile-yelp/review.pipeline-1000000
+I trained a model using 1m reviews, using 80% of the samples for training and 20% for test. It is available at https://s3.eu-central-1.amazonaws.com/diegoamicabile-yelp/review.pipeline-1000000
 
-The target variable is the stars given during the review (from 1 to 5). The model predicts this value (from 1 to 5) and is therefore a regression.
+The target variable is the amount of stars given during the review (from 1 to 5). The model predicts this value (from 1 to 5) and is therefore a regression.
 
 For this model, the MSE is the following
 

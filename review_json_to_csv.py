@@ -3,6 +3,7 @@ import json
 import csv
 import yaml
 import os
+import sys
 
 
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
@@ -13,6 +14,11 @@ with open("config.yaml", 'r') as stream:
 
 REVIEWS_INPUT_FILE = os.path.join(config['SOURCE_DIR'], config['REVIEW_JSON_FILE'])
 REVIEWS_CSV_FILE = os.path.join(config['TARGET_DIR'], config['REVIEW_CSV_FILE'])
+
+if not os.path.isfile(REVIEWS_INPUT_FILE):
+    logging.error(f'Could not find file {REVIEWS_INPUT_FILE} : exiting...')
+    sys.exit(1)
+os.makedirs(config['TARGET_DIR'], exist_ok=True)
 
 line_num = 0
 with open(REVIEWS_INPUT_FILE, 'r', encoding='UTF-8') as rif:

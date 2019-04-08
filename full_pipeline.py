@@ -22,6 +22,7 @@ ROWS_TOTAL = config['REVIEWS_USED']
 REVIEWS_TOKENS_FILE_IN = os.path.join(config['TARGET_DIR'], config['REVIEW_CSV_FILE'])
 REVIEWS_PIPELINE = os.path.join(config['TARGET_DIR'], f'review.pipeline-{ROWS_TOTAL}')
 
+# Read Reviews from CSV File
 logging.info(f'Reading {ROWS_TOTAL} reviews...')
 df = pd.read_csv(REVIEWS_TOKENS_FILE_IN, nrows=ROWS_TOTAL, usecols=['text', 'stars'])
 df = df.sample(frac=1)
@@ -29,6 +30,7 @@ df_train, df_test = train_test_split(df, test_size=0.2)
 logging.info('Done.')
 
 
+# Create and train model
 if os.path.isfile(REVIEWS_PIPELINE):
     logging.info(f'Model already exists: {REVIEWS_PIPELINE}')
 
@@ -51,7 +53,7 @@ else:
 
     logging.info("Done")
 
-
+# Evaluate model
 logging.info('Calculating error for training set...')
 train_predicted = text_clf.predict(df_train.text)
 logging.info(f'Train MSE : {mean_squared_error(df_train.stars, train_predicted):{6}.{3}}')

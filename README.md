@@ -27,6 +27,13 @@ source activate yelp_review
 python -m pip install -r requirements.txt
 ```
 
+Alternatively, with Docker
+
+```
+docker build --tag yelp_sent . 
+docker run -it -v $(pwd)/data:data --name yelp_sent yelp_sent:latest /bin/bash
+```
+
 ## SCRIPTS EXECUTION
 
 ### CONVERT REVIEWS TO CSV
@@ -45,13 +52,16 @@ Then execute
 
 `python full_pipeline.py`
 
-It will train and save a model in the target directory
+It will train and save a model in the target directory.
 
 ### USE MODEL
 
-You can use the model, typing your reviews after the command prompt, executing
+Execute:
 
 `python run_model.py`
+
+You can then use the model, typing your reviews after the command prompt, 
+
 
 
 ## MODEL DETAILS
@@ -61,25 +71,26 @@ You can use the model, typing your reviews after the command prompt, executing
 Some effort has been done on preprocessing, but more experiments might give better results. 
 
 - Standard NLTK tokenization is used
-- Punctuation token get removed, 
+- Punctuation tokens got removed, 
 - Tokens having no alphabetic characters are removed
 - CountVectorization use 1 and 2 grams
 - CountVectorization removes tokens that appear in more than 30% of the reviews corpus (corpus specific stop words)
 
 ### PIPELINE
 
-The Pipeline is made of these components. They have not been tuned, so improvements are possible
+The Pipeline is made of these components. As not much effort has been invested in this phase, improvements are certainly possible.
+
 - CountVectorizer
 - TfidfTransformer
 - SGDRegressor
 
 ### RESULT
 
-I trained a model using 1m reviews, using 80% for training and 20% for test. It is
+I trained a model using 1m reviews, using 80% for training and 20% for test. It is available at https://s3.eu-central-1.amazonaws.com/diegoamicabile-yelp/review.pipeline-1000000
 
 The target variable is the stars given during the review (from 1 to 5). The model predicts this value (from 1 to 5) and is therefore a regression.
 
-On this model, the MSE is the following
+For this model, the MSE is the following
 
-- Training Set: 
-- Test Set
+- Training Set: 1.01
+- Test Set: 1.01

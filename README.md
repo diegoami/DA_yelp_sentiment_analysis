@@ -9,11 +9,11 @@ It use the Reviews from the YELP Dataset.
 
 ### RETRIEVE THE DATASET
 
-Retrieve the YELP Dataset here: https://www.yelp.com/dataset and extract the `reviews.json` file into a directory (we will call it <SOURCE-DIR>).
+Retrieve the YELP Dataset here: https://www.yelp.com/dataset and extract the `reviews.json` file into a directory (we will call it `<SOURCE-DIR>`).
 
 ### CONFIGURE DIRECTORIES 
 
-Define the directories where the YELP dataset is located in the `config.yaml` file. 
+Configure the location of directories `<SOURCE-DIR>` and `<TARGET-DIR>` in the `config.yaml` file. 
 
 Alternative, set up symbolic links to your source and target directories from the program's home directory.
 
@@ -56,16 +56,16 @@ and then execute the commands described below, from the docker container.
 
 ### CONVERT REVIEWS TO CSV
 
-To make it easier to work with the dataset, we extract the relevant information about reviews into a CSV file, using the script
+To make it easier to work with the dataset, we extract the relevant information about reviews into a CSV file
 
 `python review_json_to_csv.py`
 
-This will save a `reviews.csv` into the target directory. 
-It is also available here: https://s3.eu-central-1.amazonaws.com/diegoamicabile-yelp/review.csv.tgz
+This will produce a `reviews.csv` into the target directory. 
 
 ### TRAIN MODEL
 
-In `config.yaml`, set up REVIEWS_USED to the amount of reviews you want to use for your model.
+In `config.yaml`, set REVIEWS_USED to the amount of reviews you want to use for your model.
+
 Then execute
 
 `python full_pipeline.py`
@@ -78,7 +78,7 @@ Execute:
 
 `python run_model.py`
 
-You can then use the model, typing your reviews after the command prompt, 
+You can then use the model, typing your reviews after the command prompt, and getting a stars rating.
 
 
 
@@ -89,7 +89,7 @@ You can then use the model, typing your reviews after the command prompt,
 Some effort has been done on preprocessing, but more experiments might give better results. 
 
 - Standard NLTK tokenization is used
-- Punctuation tokens got removed, 
+- Punctuation tokens got removed
 - Tokens having no alphabetic characters are removed
 - CountVectorization use 1 and 2 grams
 - CountVectorization removes tokens that appear in more than 30% of the reviews corpus (corpus specific stop words)

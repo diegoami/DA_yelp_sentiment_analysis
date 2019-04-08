@@ -3,5 +3,5 @@ TARGET_DIR : data/target/
 REVIEW_JSON_FILE : review.json
 REVIEW_CSV_FILE : review.csv
 VERBOSE: True
-REVIEWS_USED: 1000000
+REVIEWS_USED: 100000
 # REVIEWS_USED: -1 for all

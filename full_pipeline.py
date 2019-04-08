@@ -30,13 +30,16 @@ df_train, df_test = train_test_split(df, test_size=0.2)
 logging.info('Done.')
 
 
-# Create and train model
+
 if os.path.isfile(REVIEWS_PIPELINE):
+    # Model trained, loading
     logging.info(f'Model already exists: {REVIEWS_PIPELINE}')
 
     with open(REVIEWS_PIPELINE, 'rb') as wmr:
         text_clf = pickle.load(wmr)
 else:
+    # Create and train model
+
     logging.info(f'Model does not exist - creating it...')
     text_clf = Pipeline([
          ('vect', TokenCountVectorizer(tokenizer=TokenCountVectorizer.to_tokens, ngram_range=(1, 2), max_df=0.3, min_df=10)),

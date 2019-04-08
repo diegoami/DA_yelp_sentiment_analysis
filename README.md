@@ -33,6 +33,7 @@ If you have Conda
 conda create -n yelp_review python=3.7
 source activate yelp_review 
 python -m pip install -r requirements.txt
+python -c "import nltk; nltk.download('punkt')"
 ```
 
 Alternatively, with Docker

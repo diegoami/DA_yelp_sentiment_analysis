@@ -4,7 +4,7 @@ import os
 import yaml
 
 
-SAMPLE_PREDICTIONS = ["This place is great", "I hate this place, it sucks","Food is bad, drinks are average, very expensive"]
+SAMPLE_PREDICTIONS = ["This place is great", "It is a boring and ugly place", "Food is bad and it is very expensive"]
 
 with open("config.yaml", 'r') as stream:
     config = yaml.safe_load(stream)

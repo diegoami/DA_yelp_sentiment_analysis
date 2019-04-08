@@ -4,6 +4,7 @@
 
 In this project we build a regressor trying to predict the stars of a review from the text of the review itself.
 It use the Reviews from the YELP Dataset.
+The associated presentations is here: https://docs.google.com/presentation/d/1pBWY2bq6MMtow2a61SKVO0yM0bedBzOsRHr7nxkfAwI/edit?usp=sharing
 
 ## PREPARATORY WORK
 
